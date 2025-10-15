@@ -1,0 +1,49 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: documate-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env # use this to pass backend secrets / config
+    networks:
+      - documate-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # CHANGE THIS LINE:
+        # When the frontend is accessed from the host browser,
+        # the backend is available at localhost:8000 on the host.
+        - VITE_API_BASE_URL=http://localhost:8000
+    container_name: documate-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:80" # serve dist on 5173 via "serve" in Dockerfile
+    depends_on:
+      - backend
+    env_file:
+      - ./frontend/.env # optional: local dev overrides; not needed for VITE build arg
+    networks:
+      - documate-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5173 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+networks:
+  documate-net:
+    driver: bridge

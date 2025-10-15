@@ -1,5 +1,5 @@
 import React from "react";
-import DocuMateApp from "./DocuMateApp";
+import DocuMateApp from "./components/DocuMateApp";
 import "./App.css";
 
 function App() {
