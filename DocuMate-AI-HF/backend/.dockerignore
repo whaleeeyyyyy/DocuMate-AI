@@ -1,0 +1,21 @@
+# Common
+.git
+node_modules
+.vscode
+.DS_Store
+.env
+*.log
+dist
+build
+
+# Python env & caches
+venv
+.venv
+__pycache__
+*.pyc
+local.db
+*.sqlite3
+
+# Large user files (pdfs, videos)
+*.pdf
+*.mp4
